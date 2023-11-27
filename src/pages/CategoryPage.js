@@ -1,78 +1,23 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-
-// Components
-import Card from "../components/cardcategory";
-
-
-export default function LandingPage() {
-    const [data, setData] = useState(null);
-    const [isLoaded, setisLoaded] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [query, setQuery] = useState("shooter");
-    const nav = useNavigate();
-
-    useEffect(() => {
-        const fetchData = async (query) => {
-            setIsLoading(true);
-            try {
-                const response = await axios.get(
-                    "https://free-to-play-games-database.p.rapidapi.com/api/games", {
-                    params: { category: query },
-                    headers: {
-                        'X-RapidAPI-Key': '21e83afa83msha06ac3fd2a4d763p149d2ejsn4b3a6251466e',
-                        'X-RapidAPI-Host': 'free-to-play-games-database.p.rapidapi.com'
-                    },
-                }
-                );
-                if (response.status === 200) {
-                    setData(response.data);
-                    setisLoaded(true);
-                    setIsLoading(false);
-                }
-            } catch (err) {
-                console.log(err);
-                setIsLoading(false);
-            }
-        };
-        if (!isLoaded) {
-            fetchData(query);
-        }
-    }, [isLoaded, query]);
-    const onSearch = (e) => {
-        if (e.key === "Enter") {
-            setisLoaded(false);
-            setQuery(e.target.value);
-        }
-    };
-    const handleClick = (item) => {
-        navToDetail(item);
-    };
-    const navToDetail = (item) => {
-        nav(`/detail/${item.id}`, { state: { itemData: item } });
-
-    };
+import React from "react";
+import { Link } from 'react-router-dom';
+import './category.css';
+const CategoryPage = () => {
     return (
-        <main>
-            <input
-                type="text"
-                placeholder="Search games by platform"
-                onKeyDown={(e) => onSearch(e)}
-            />
-            <h3 className="title">Search : {query}</h3>
-            {!data || isLoading ? (
-                <p>Loading...</p>
-            ) : (
-                <div className="card-container">
-                    {data.map((item, index) => {
-                        return (
-                            <Card data={item} key={index} onClick={() => handleClick(item)} />
-                        );
-                    })}
-                </div>
-            )}
-
-        </main>
+        <div>
+            <h1>Pilih Kategori Game:</h1>
+            <ul className="category-wrapper">
+                <li className="navlink"><Link to="/shooter">Shooter</Link></li>
+                <li className="navlink"><Link to="/mmorpg">MMORPG</Link></li>
+                <li className="navlink"><Link to="/anime">Anime</Link></li>
+                <li className="navlink"><Link to="/strategy">Strategy</Link></li>
+                <li className="navlink"><Link to="/fantasy">Fantasy</Link></li>
+                <li className="navlink"><Link to="/sci-fi">Sci-Fi</Link></li>
+                <li className="navlink"><Link to="/racing">Racing</Link></li>
+                <li className="navlink"><Link to="/social">Social</Link></li>
+                <li className="navlink"><Link to="/sports">Sports</Link></li>
+            </ul>
+        </div>
     );
-}
+};
+
+export default CategoryPage;
